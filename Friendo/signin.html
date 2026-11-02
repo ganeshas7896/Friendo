@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var m=localStorage.getItem('friendo_theme_mode')||'light';var a=localStorage.getItem('friendo_theme_accent')||'blue';document.documentElement.setAttribute('data-theme',m);document.documentElement.setAttribute('data-accent',a);}catch(e){}})();</script>
+<title>Sign In — Friendo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="signin">
+<div class="app">
+  <div class="mobile-topbar">
+    <a class="back" href="index.html">&larr; Back</a>
+    <button type="button" class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle theme">&#9788;</button>
+  </div>
+
+  <div class="auth-wrap">
+    <div class="logo-row"><img src="logo.png" alt="Friendo"><span>Friendo</span></div>
+    <h1>Welcome back</h1>
+    <p class="muted">Sign in to keep chatting with your friends.</p>
+
+    <div class="auth-error" id="errorBox"></div>
+
+    <form id="signinForm" onsubmit="return doSignIn(event)">
+      <div class="field">
+        <label>Username or email</label>
+        <input type="text" id="identity" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" required autocomplete="current-password" placeholder="Password">
+      </div>
+      <button class="btn btn-primary" type="submit" id="signinBtn">Sign In</button>
+    </form>
+
+    <p class="auth-switch">New to Friendo? <a href="signup.html">Create an account</a></p>
+  </div>
+</div>
+<script src="script.js"></script>
+<script>
+  async function doSignIn(e) {
+    e.preventDefault();
+    const btn = document.getElementById('signinBtn');
+    const errorBox = document.getElementById('errorBox');
+    errorBox.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Signing in...';
+
+    try {
+      const result = await postForm('signin.php', {
+        identity: document.getElementById('identity').value.trim(),
+        password: document.getElementById('password').value
+      });
+      if (result.ok) {
+        window.location.href = result.next;
+      } else {
+        errorBox.textContent = result.message || 'Sign in failed.';
+        errorBox.style.display = 'block';
+      }
+    } catch (err) {
+      errorBox.textContent = 'Could not reach the server. Make sure PHP/MySQL are running.';
+      errorBox.style.display = 'block';
+    }
+    btn.disabled = false; btn.textContent = 'Sign In';
+    return false;
+  }
+</script>
+</body>
+</html>

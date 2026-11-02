@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var m=localStorage.getItem('friendo_theme_mode')||'light';var a=localStorage.getItem('friendo_theme_accent')||'blue';document.documentElement.setAttribute('data-theme',m);document.documentElement.setAttribute('data-accent',a);}catch(e){}})();</script>
+<title>Create your account — Friendo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="signup">
+<div class="app">
+  <div class="mobile-topbar">
+    <a class="back" href="index.html">&larr; Back</a>
+    <button type="button" class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle theme">&#9788;</button>
+  </div>
+
+  <div class="auth-wrap">
+    <div class="logo-row"><img src="logo.png" alt="Friendo"><span>Friendo</span></div>
+    <h1>Create your account</h1>
+    <p class="muted">Takes less than a minute.</p>
+
+    <div class="auth-error" id="errorBox"></div>
+
+    <form id="signupForm" onsubmit="return doSignUp(event)">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" required minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" type="submit" id="signupBtn">Create Account</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="signin.html">Sign In</a></p>
+  </div>
+</div>
+<script src="script.js"></script>
+<script>
+  async function doSignUp(e) {
+    e.preventDefault();
+    const btn = document.getElementById('signupBtn');
+    const errorBox = document.getElementById('errorBox');
+    errorBox.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Creating account...';
+
+    try {
+      const result = await postForm('signup.php', {
+        username: document.getElementById('username').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+      });
+      if (result.ok) {
+        window.location.href = result.next; // -> terms.html, onboarding continues from there
+      } else {
+        errorBox.textContent = result.message || 'Sign up failed.';
+        errorBox.style.display = 'block';
+      }
+    } catch (err) {
+      errorBox.textContent = 'Could not reach the server. Make sure PHP/MySQL are running.';
+      errorBox.style.display = 'block';
+    }
+    btn.disabled = false; btn.textContent = 'Create Account';
+    return false;
+  }
+</script>
+</body>
+</html>

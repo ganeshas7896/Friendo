@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var m=localStorage.getItem('friendo_theme_mode')||'light';var a=localStorage.getItem('friendo_theme_accent')||'blue';document.documentElement.setAttribute('data-theme',m);document.documentElement.setAttribute('data-accent',a);}catch(e){}})();</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="profile-confirm">
+<div class="app">
+  <div class="mobile-topbar">
+    <a class="back" href="profile-setup.html">&larr; Back</a>
+    <button type="button" class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle theme">&#9788;</button>
+  </div>
+
+  <div class="page-content">
+    <h1 class="page-title">Profile Confirmation</h1>
+    <p class="muted" style="margin-top:-10px;">Please review your profile before you start.</p>
+
+    <div class="confirm-table row-list" id="confirmTable" style="margin-top:16px;"></div>
+
+    <div class="btn-row" style="margin-top:22px;">
+      <a class="btn btn-outline" href="profile-setup.html">Edit Profile</a>
+      <a class="btn btn-primary" href="people.php">Start</a>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+<script>
+  const profile = getProfile();
+  const rows = [
+    ['Nickname', profile.nickname],
+    ['Gender', profile.gender],
+    ['Birth Year', profile.birthYear],
+    ['Nationality', profile.nationality],
+    ['Region', profile.region]
+  ];
+  document.getElementById('confirmTable').innerHTML = rows.map(function (r) {
+    return '<div class="row"><span class="row-label">' + escapeHtml(r[0]) + '</span><span class="row-value">' + escapeHtml(r[1] || '-') + '</span></div>';
+  }).join('');
+</script>
+</body>
+</html>
